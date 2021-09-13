@@ -1,3 +1,4 @@
+const fs = require('fs');
 const _ = require('lodash');
 const redis = require('redis');
 
@@ -6,6 +7,7 @@ const client = redis.createClient({
   port: 6379,
 });
 client.on('error', (err) => {
+  // eslint-disable-next-line no-console
   console.log(err);
 });
 const models = require('../models/productmodel');
@@ -93,33 +95,59 @@ const productctrl = {
     }
   },
   // delete data Product
-  del: (req, res) => {
+  del: async (req, res) => {
     try {
       const { id } = req.params;
-      models.del(id).then((result) => {
-        client.del('product');
-        success(res, result, 'Delete Product Data Success');
-      })
-        .catch((err) => {
-          failed(res, 404, err);
-        });
+      const imgName = await models.getimg(id);
+      const imgPath = `./src/img/${imgName[0].img}`;
+      fs.unlink(imgPath, ((errImg) => {
+        if (errImg) {
+          models.del(id).then((result) => {
+            success(res, result, 'Delete Product Success');
+          })
+            .catch((err) => {
+              failed(res, 404, err);
+            });
+        } else {
+          models.del(id).then((result) => {
+            success(res, result, 'Delete Product With Img Success');
+          })
+            .catch((err) => {
+              failed(res, 404, err);
+            });
+        }
+      }));
     } catch (err) {
-      failed(res, 408, err);
+      failed(res, 404, err);
     }
   },
   // update data produk
-  update: (req, res) => {
+  update: async (req, res) => {
     try {
       const { body } = req;
       const { id } = req.params;
       const img = req.file.filename;
-      models.update(img, body, id).then((result) => {
-        client.del('product');
-        success(res, result, 'Update Product Data Success');
-      })
-        .catch((err) => {
-          failed(res, 400, err);
-        });
+      const imgName = await models.getimg(id);
+      const imgPath = `./src/img/${imgName[0].img}`;
+      fs.unlink(imgPath, ((errImg) => {
+        if (errImg) {
+          models.update(img, body, id).then((result) => {
+            client.del('product');
+            success(res, result, 'Update Product Data Success');
+          })
+            .catch((err) => {
+              failed(res, 400, err);
+            });
+        } else {
+          models.update(img, body, id).then((result) => {
+            client.del('product');
+            success(res, result, 'Update Product Data Success');
+          })
+            .catch((err) => {
+              failed(res, 400, err);
+            });
+        }
+      }));
     } catch (err) {
       failed(res, 500, err);
     }

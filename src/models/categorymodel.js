@@ -20,15 +20,6 @@ const categorymodel = {
       }
     });
   }),
-  getdetail: (id) => new Promise((resolve, reject) => {
-    db.query(`select * from category where id='${id}'`, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  }),
   insert: (idIns, category) => new Promise((resolve, reject) => {
     db.query(`insert into category (id, category) value ('${idIns}','${category}')`, (err, result) => {
       if (err) {
@@ -47,8 +38,8 @@ const categorymodel = {
       }
     });
   }),
-  update: (id, idUpd, category) => new Promise((resolve, reject) => {
-    db.query(`update category set id='${idUpd}', category='${category}' where id="${id}"`, (err, result) => {
+  update: (id, category) => new Promise((resolve, reject) => {
+    db.query(`update category set category='${category}' where id="${id}"`, (err, result) => {
       if (err) {
         reject(err);
       } else {

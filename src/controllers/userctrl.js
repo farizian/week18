@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const fs = require('fs');
 const models = require('../models/usermodel');
 const { success, failed, successlogin } = require('../helper/response');
 
@@ -127,20 +127,33 @@ const userctrl = {
     }
   },
   // delete data user
-  del: (req, res) => {
+  del: async (req, res) => {
     try {
       const { id } = req.params;
-      models.del(id).then((result) => {
-        success(res, result, 'Delete User Data Success');
-      })
-        .catch((err) => {
-          failed(res, 404, err);
-        });
+      const imgName = await models.getimg(id);
+      const imgPath = `./src/img/${imgName[0].img}`;
+      fs.unlink(imgPath, ((errImg) => {
+        if (errImg) {
+          models.del(id).then((result) => {
+            success(res, result, 'Delete User Data Success');
+          })
+            .catch((err) => {
+              failed(res, 404, err);
+            });
+        } else {
+          models.del(id).then((result) => {
+            success(res, result, 'Delete User Data Success');
+          })
+            .catch((err) => {
+              failed(res, 404, err);
+            });
+        }
+      }));
     } catch (err) {
-      failed(res, 408, err);
+      failed(res, 404, err);
     }
   },
-  update: (req, res) => {
+  update: async (req, res) => {
     try {
       const { body } = req;
       const { id } = req.params;
@@ -150,18 +163,32 @@ const userctrl = {
       const { gender } = body;
       const { username } = body;
       const { email } = body;
-      const { password } = body;
       const { address } = body;
       const img = req.file.filename;
       const { status } = body;
       const phone = body.phone_number;
-      models.update(id, img, first, last, birth, gender, username, email, password, address, phone, status)
-        .then((result) => {
-          success(res, result, 'Update User Data Success');
-        })
-        .catch((err) => {
-          failed(res, 400, err);
-        });
+      const pw = bcrypt.hashSync(body.password, 10);
+      const imgName = await models.getimg(id);
+      const imgPath = `./src/img/${imgName[0].img}`;
+      fs.unlink(imgPath, ((errImg) => {
+        if (errImg) {
+          models.update(id, img, first, last, birth, gender, username, email, pw, address, phone, status)
+            .then((result) => {
+              success(res, result, 'Update User Data Success');
+            })
+            .catch((err) => {
+              failed(res, 400, err);
+            });
+        } else {
+          models.update(id, img, first, last, birth, gender, username, email, pw, address, phone, status)
+            .then((result) => {
+              success(res, result, 'Update User Data Success');
+            })
+            .catch((err) => {
+              failed(res, 400, err);
+            });
+        }
+      }));
     } catch (err) {
       failed(res, 500, err);
     }

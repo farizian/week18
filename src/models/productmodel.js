@@ -38,6 +38,15 @@ const prdmodel = {
       }
     });
   }),
+  getimg: (id) => new Promise((resolve, reject) => {
+    db.query(`select img from product where id='${id}'`, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  }),
   insert: (body, img) => new Promise((resolve, reject) => {
     db.query(`insert into product (img, disc, prdname, price, category_id, size) value ('${img}', '${body.disc}', '${body.prdname}', '${body.price}', '${body.category_id}', '${body.size}')`, (err, result) => {
       if (err) {
@@ -57,7 +66,7 @@ const prdmodel = {
     });
   }),
   update: (img, body, id) => new Promise((resolve, reject) => {
-    db.query(`update product set img='${img}', disc='${body.disc}', prdname='${body.prdname}', price='${body.price}', category_id='${body.category_id} size='${body.size}' where id='${id}' `, (err, result) => {
+    db.query(`update product set img='${img}', disc='${body.disc}', prdname='${body.prdname}', price='${body.price}', category_id='${body.category_id}', size='${body.size}' where id='${id}' `, (err, result) => {
       if (err) {
         reject(err);
       } else {

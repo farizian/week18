@@ -8,7 +8,7 @@ const categoryctrl = {
     try {
       const { query } = req;
       const search = query.search === undefined ? '' : query.search;
-      const field = query.field === undefined ? 'category' : query.field;
+      const field = query.field === undefined ? 'id' : query.field;
       const sort = query.sort === undefined ? 'asc' : query.sort;
       const limit = query.limit === undefined ? 50 : query.limit;
       const offset = query.page === undefined || query.page === 1 ? 0 : (query.page - 1) * limit;
@@ -30,21 +30,6 @@ const categoryctrl = {
       failed(res, 401, err);
     }
   },
-  // menampilkan detail table category berdasarkan id
-  getdetail: (req, res) => {
-    try {
-      const { id } = req.params; // url parameter untuk mengambil id
-      models.getdetail(id).then((result) => {
-        success(res, result, 'Get Category Data Success');
-      })
-        .catch((err) => {
-          failed(res, 500, err);
-        });
-    } catch (err) {
-      failed(res, 401, err);
-    }
-  },
-  // insert data category
   insert: (req, res) => {
     try {
       const { body } = req;
@@ -78,9 +63,8 @@ const categoryctrl = {
     try {
       const { body } = req;
       const { id } = req.params;
-      const idUpd = body.id;
       const { category } = body;
-      models.update(id, idUpd, category).then((result) => {
+      models.update(id, category).then((result) => {
         success(res, result, 'Update Category Data Success');
       })
         .catch((err) => {

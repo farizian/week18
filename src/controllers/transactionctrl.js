@@ -6,6 +6,7 @@ const client = redis.createClient({
   port: 6379,
 });
 client.on('error', (err) => {
+  // eslint-disable-next-line no-console
   console.log(err);
 });
 const models = require('../models/transactionmodel');
@@ -65,8 +66,8 @@ const transactionctrl = {
   // menampilkan detail table transaction berdasarkan id
   getdetailMaster: (req, res) => {
     try {
-      const { id } = req.params; // url parameter untuk mengambil id
-      models.getdetail(id).then((result) => {
+      const id = req.userId; // url parameter untuk mengambil id
+      models.getdetailMaster(id).then((result) => {
         success(res, result, 'Get transaction Data Success');
       })
         .catch((err) => {
@@ -115,18 +116,18 @@ const transactionctrl = {
   del: (req, res) => {
     try {
       const { id } = req.params;
-      models.del(id).then((result) => {
+      models.delDetails(id).then(async (result) => {
         client.del('transaction');
+        await models.delMaster(id);
         success(res, result, 'Delete transaction Data Success');
       })
         .catch((err) => {
           failed(res, 404, err);
         });
     } catch (err) {
-      failed(res, 408, err);
+      failed(res, 404, err);
     }
   },
-
 };
 
 module.exports = transactionctrl;

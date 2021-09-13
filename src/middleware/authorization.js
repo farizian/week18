@@ -19,16 +19,6 @@ const authorization = {
     } catch (err) {
       failed(res, 500, err);
     }
-
-    // db.query(`SELECT * FROM user WHERE id='${id}'`, (err, result) => {
-    //   if (err) {
-    //     failed(res, 408, err);
-    //   } else if (result[0].status === 0) {
-    //     next();
-    //   } else {
-    //     failed(res, 401, 'Harus Admin!');
-    //   }
-    // });
   },
 };
 

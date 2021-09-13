@@ -32,9 +32,9 @@ const usermodel = {
   }),
   register: (body, pass) => new Promise((resolve, reject) => {
     db.query(
-      `INSERT INTO user (email, password, phone_number)
+      `INSERT INTO user (email, password, phone_number, status)
         VALUE (
-          '${body.email}','${pass}','${body.phone_number}'
+          '${body.email}','${pass}','${body.phone_number}','1'
         )`, (err, result) => {
         if (err) {
           reject(err);
@@ -46,6 +46,15 @@ const usermodel = {
   }),
   getdetail: (id) => new Promise((resolve, reject) => {
     db.query(`select * from user where id='${id}'`, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  }),
+  getimg: (id) => new Promise((resolve, reject) => {
+    db.query(`select img from user where id='${id}'`, (err, result) => {
       if (err) {
         reject(err);
       } else {
