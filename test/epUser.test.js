@@ -55,7 +55,7 @@ describe('test endpoint user', async () => {
   });
   it('test post /register', () => {
     const body = {
-      email: 'nadyta<3@gmail.com',
+      email: 'joni@gmail.com',
       password: '123',
       phone_number: '08123',
     };

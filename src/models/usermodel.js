@@ -21,15 +21,6 @@ const usermodel = {
       }
     });
   }),
-  checkregister: (body) => new Promise((resolve, reject) => {
-    db.query(`select * from user where email='${body.email}' && username='${body.username}' `, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  }),
   login: (body) => new Promise((resolve, reject) => {
     db.query(`select * from user where email="${body.email}"`, (err, result) => {
       if (err) {
@@ -52,6 +43,15 @@ const usermodel = {
         }
       },
     );
+  }),
+  checkregister: (body) => new Promise((resolve, reject) => {
+    db.query(`select * from user where email='${body.email}' `, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
   }),
   getdetail: (id) => new Promise((resolve, reject) => {
     db.query(`select * from user where id='${id}'`, (err, result) => {
