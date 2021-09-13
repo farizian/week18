@@ -107,18 +107,24 @@ const userctrl = {
     }
   },
   // register
-  register: (req, res) => {
+  register: async (req, res) => {
     try {
       const { body } = req;
-      bcrypt.hash(body.password, 10, (err, hash) => {
-        // Store hash in your password DB.
-        if (err) {
-          failed(res, 401, err);
+      models.checkregister(body).then((result) => {
+        if (result) {
+          failed(res, 401, 'email sudah digunakan');
         } else {
-          models.register(body, hash).then((result) => {
-            success(res, result);
-          }).catch((err1) => {
-            failed(res, 401, err1);
+          bcrypt.hash(body.password, 10, (err, hash) => {
+            // Store hash in your password DB.
+            if (err) {
+              failed(res, 401, err);
+            } else {
+              models.register(body, hash).then((result2) => {
+                success(res, result2);
+              }).catch((err1) => {
+                failed(res, 401, err1);
+              });
+            }
           });
         }
       });

@@ -76,7 +76,7 @@ describe('test endpoint product', async () => {
       } else {
         getToken.admin().then((token) => {
           request(app)
-            .put('/product/48')
+            .put('/product/53')
             .set('token', token)
             .field('disc', '11%')
             .field('prdname', 'seblak')
@@ -100,7 +100,7 @@ describe('test endpoint product', async () => {
   it('test delete /product', () => {
     getToken.admin().then((token) => {
       request(app)
-        .delete('/product/46')
+        .delete('/product/52')
         .set('token', token)
         .expect('Content-Type', /json/)
         .expect(200)

@@ -13,7 +13,16 @@ const usermodel = {
     });
   }),
   getlist: (search, field, sort, limit, offset) => new Promise((resolve, reject) => {
-    db.query(`select * from user where username like '%${search}%' order by ${field} ${sort} limit ${limit} offset ${offset}`, async (err, result) => {
+    db.query(`select * from user where username like '%${search}%' order by ${field} ${sort} limit ${limit} offset ${offset}`, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  }),
+  checkregister: (body) => new Promise((resolve, reject) => {
+    db.query(`select * from user where email='${body.email}' && username='${body.username}' `, (err, result) => {
       if (err) {
         reject(err);
       } else {
