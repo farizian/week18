@@ -68,7 +68,9 @@ describe('test endpoint product', async () => {
       }
     });
   });
-  it('test update /product', () => {
+  // update
+  // success
+  it('test update /product success', () => {
     const filePath = `${__dirname}/img/test4.jpg`;
     fs.exists(filePath, (exists) => {
       if (!exists) {
@@ -76,7 +78,7 @@ describe('test endpoint product', async () => {
       } else {
         getToken.admin().then((token) => {
           request(app)
-            .put('/product/53')
+            .put('/product/57')
             .set('token', token)
             .field('disc', '11%')
             .field('prdname', 'seblak')
@@ -97,16 +99,60 @@ describe('test endpoint product', async () => {
       }
     });
   });
-  it('test delete /product', () => {
+  // failed
+  it('test update /product failed', () => {
+    const filePath = `${__dirname}/img/test4.jpg`;
+    fs.exists(filePath, (exists) => {
+      if (!exists) {
+        console.log('file tidak ditemukan');
+      } else {
+        getToken.admin().then((token) => {
+          request(app)
+            .put('/product/23')
+            .set('token', token)
+            .attach('img', filePath)
+            .expect('Content-Type', /json/)
+            .expect(404)
+            .then((response) => {
+              expect(response.body).to.be.a('object');
+              expect(response.body).to.have.property('success', false);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      }
+    });
+  });
+  // delete
+  // success
+  it('test delete /product success', () => {
     getToken.admin().then((token) => {
       request(app)
-        .delete('/product/52')
+        .delete('/product/56')
         .set('token', token)
         .expect('Content-Type', /json/)
         .expect(200)
         .then((response) => {
           expect(response.body).to.be.a('object');
           expect(response.body).to.have.property('success', true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  });
+  // failed
+  it('test delete /product failed', () => {
+    getToken.admin().then((token) => {
+      request(app)
+        .delete('/product/21')
+        .set('token', token)
+        .expect('Content-Type', /json/)
+        .expect(404)
+        .then((response) => {
+          expect(response.body).to.be.a('object');
+          expect(response.body).to.have.property('success', false);
         })
         .catch((err) => {
           console.log(err);

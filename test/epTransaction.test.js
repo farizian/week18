@@ -94,16 +94,35 @@ describe('test endpoint transaction', async () => {
         });
     });
   });
+  // delete
+  // success
   it('test delete /transaction', () => {
     getToken.admin().then((token) => {
       request(app)
-        .delete('/transaction/55')
+        .delete('/transaction/59')
         .set('token', token)
         .expect('Content-Type', /json/)
         .expect(200)
         .then((response) => {
           expect(response.body).to.be.a('object');
           expect(response.body).to.have.property('success', true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  });
+  // failed
+  it('test delete /transaction', () => {
+    getToken.admin().then((token) => {
+      request(app)
+        .delete('/transaction/46')
+        .set('token', token)
+        .expect('Content-Type', /json/)
+        .expect(404)
+        .then((response) => {
+          expect(response.body).to.be.a('object');
+          expect(response.body).to.have.property('success', false);
         })
         .catch((err) => {
           console.log(err);

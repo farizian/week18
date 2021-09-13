@@ -39,7 +39,6 @@ const productctrl = {
               page: query.page,
               totalpage: Math.ceil(total / limit),
             };
-
             client.set('product', JSON.stringify(allData));
             success(res, output, 'get Product Data success');
           })
@@ -91,7 +90,7 @@ const productctrl = {
           failed(res, 400, err);
         });
     } catch (err) {
-      failed(res, 408, err);
+      failed(res, 500, err);
     }
   },
   // delete data Product
@@ -136,7 +135,7 @@ const productctrl = {
             success(res, result, 'Update Product Data Success');
           })
             .catch((err) => {
-              failed(res, 400, err);
+              failed(res, 404, err);
             });
         } else {
           models.update(img, body, id).then((result) => {
@@ -144,7 +143,7 @@ const productctrl = {
             success(res, result, 'Update Product Data Success');
           })
             .catch((err) => {
-              failed(res, 400, err);
+              failed(res, 404, err);
             });
         }
       }));

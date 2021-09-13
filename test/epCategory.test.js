@@ -45,11 +45,11 @@ describe('test endpoint category', async () => {
   it('test update /category', () => {
     getToken.admin().then((token) => {
       request(app)
-        .put('/category/17')
+        .put('/category/28')
         .set('token', token)
         .send({
           // eslint-disable-next-line quote-props
-          'category': 'makanan pedas',
+          'category': 'makanan jahat',
         })
         .expect('Content-Type', /json/)
         .expect(200)
@@ -65,7 +65,7 @@ describe('test endpoint category', async () => {
   it('test delete /category', () => {
     getToken.admin().then((token) => {
       request(app)
-        .delete('/category/16')
+        .delete('/category/27')
         .set('token', token)
         .expect('Content-Type', /json/)
         .expect(200)
